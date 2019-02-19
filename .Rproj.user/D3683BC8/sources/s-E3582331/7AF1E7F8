@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1550543915479.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4086985546",
+    "id" : "7AF1E7F8",
+    "lastKnownWriteTime" : 1550598596,
+    "last_content_update" : 1550598596797,
+    "path" : "D:/R projects/tidy_tuesday/ethnicity_stacked_bar.R",
+    "project_path" : "ethnicity_stacked_bar.R",
+    "properties" : {
+        "cursorPosition" : "42,15",
+        "scrollLine" : "21",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
