@@ -37,5 +37,7 @@ ggplot(data_change, aes(x = year, y = field, fill = change))+
   theme(plot.subtitle = element_text(face = "italic", size = 14), 
         plot.title = element_text(size = 18),
         plot.caption = element_text(face = "italic", size = 8, vjust = 0.5, hjust = 1)) +
-  labs(x = "Year", y = "Field", title = "Percent of PhDs awarded to men compared to women", subtitle = "I don't know what I expected...", caption = "Graphic: @W_R_Chase\nData: NCSES") +
+  labs(x = "Year", y = "Field", title = str_wrap("Gender imbalance of PhDs awarded to men compared to women", 35), caption = "Graphic: @W_R_Chase\nData: NCSES") +
   coord_fixed()
+
+ggsave("gender_gap_by_field.png", device = "png", type = "cairo", width = 8, height = 7)

@@ -37,6 +37,6 @@ ggplot(data_percent, aes(x = field, y = percent, fill = ethnicity)) +
   theme(plot.subtitle = element_text(face = "italic", size = 14), 
         plot.title = element_text(size = 18),
         plot.caption = element_text(face = "italic", size = 8, vjust = 0.5, hjust = 1)) +
-  labs(x = "Year", y = "Percent", title = "PhDs awarded by ethnicity", subtitle = "Grad school is very white, but changing slowly", caption = "Graphic: @W_R_Chase\nData: NCSES")
+  labs(x = "", y = "Percent", title = "PhDs awarded by ethnicity in 2017", subtitle = "That's pretty depressing... please do better", caption = "Graphic: @W_R_Chase\nData: NCSES")
 
-ggsave("ethnicity_by_field.png", device = "png", type = "cairo", height = 6, width = 6.5)
+ggsave("ethnicity_by_field.png", device = "png", type = "cairo", height = 5, width = 10)
