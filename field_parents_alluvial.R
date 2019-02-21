@@ -36,7 +36,7 @@ ggplot(as.data.frame(data_clean),
   geom_stratum(width = 1/7, fill = "#efe1c6", color = "white", size = 1) +
   geom_text(stat = "stratum", label.strata = TRUE, family = "Lato", hjust = "left", nudge_x = -0.065) +
   scale_x_discrete(limits = c(str_wrap("PhD field of study", 18), str_wrap("Parent's educational attainment", 18)), expand = c(.05, .05)) +
-  scale_fill_manual(values = c("#c03728", "#919c4c", "#fd8f24", "#f5c04a", "#e68c7c", "#828585", "#4f5157", "#6f5438"), guide = FALSE) +
+  scale_fill_manual(values = c("#c03728", "#f5c04a", "#0C1E43"), guide = FALSE) +
   theme_pomological(base_family="Lato", base_size = 14) +
   theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.text.x = element_text(size = 14, hjust = 0.5)) +
   theme(plot.subtitle = element_text(face = "italic", size = 14), 
