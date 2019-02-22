@@ -73,7 +73,7 @@ ggplot(data_eth, aes(x = eth, y = percent, fill = support)) +
         plot.title = element_text(size = 18),
         plot.caption = element_text(face = "italic", size = 8, vjust = 0.5, hjust = 1)) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Ethnicity", y = "Percent", title = "Primary source of PhD funding by ethnicity", subtitle = str_wrap("International students rely almost entirely on assistantships and grants, while over 40% of black students fund their PhD with personal resources", 50), caption = "Graphic: @W_R_Chase\nData: NCSES")
+  labs(x = "Ethnicity", y = "Percent", title = "Primary source of PhD funding by ethnicity", subtitle = str_wrap("International students rely almost entirely on assistantships and grants, while black students are passed over for assistantships and fill the gap with their own resources", 55), caption = "Graphic: @W_R_Chase\nData: NCSES")
 
 ggsave("ethnicity_funding_support.png", device = "png", type = "cairo", height = 6, width = 12)
 
