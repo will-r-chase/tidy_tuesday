@@ -2,10 +2,12 @@ extrafont::loadfonts(device="win")
 library(tidyverse)
 library(ggpomological)
 
+#data
 jobs_gender <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-03-05/gender_earnings.csv")
 earnings_female <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-03-05/earnings_female.csv") 
 employed_gender <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-03-05/employed_gender.csv") 
 
+#base theme
 theme_du_bois <- function() {
   theme_gray(base_family = "Inconsolata") %+replace%
     theme(
@@ -24,16 +26,23 @@ theme_du_bois <- function() {
     )
 }
 
+#get our data ready
 part_time <- 
   employed_gender %>%
   select(year, part_time_female, part_time_male, full_time_female, full_time_male) %>%
   gather(key = var, value = percent, -year) %>%
   separate(var, into = c("type", "time", "sex")) %>%
   select(-time) %>%
-  mutate(type = ifelse(type == "full", "Full Time", "Part Time"))
+  mutate(type = ifelse(type == "full", "Full Time", "Part Time")) %>%
+  mutate(half_decade = (year %/% 5) * 5) %>% #this'll make it more blocky like the original
+  group_by(half_decade, sex, type) %>%
+  mutate(average = round(mean(percent), 0))
+
+#x labels
+labs <- c("100", "90", "80", "70", "60", "50", "40", "30", "20", "10", "0", "10",  "20",  "30",  "40",  "50",  "60",  "70",  "80",  "90",  "100")
 
 plot <- 
-ggplot(part_time, aes(x = rev(year), y = ifelse(sex=="male", -percent, percent), fill = type)) +
+ggplot(part_time, aes(x = rev(year), y = ifelse(sex=="male", -average, average), fill = type)) +
   geom_bar(stat = "identity", width = 1) +
   geom_hline(yintercept = 0, linetype = "solid", size = 2) +
   annotate("text", x = c(2000, 2000, 2000, 2000), 
@@ -43,21 +52,21 @@ ggplot(part_time, aes(x = rev(year), y = ifelse(sex=="male", -percent, percent),
   coord_flip(clip = "off") +
   theme_du_bois() +
   scale_fill_manual(
-    values = c("royalblue3", "firebrick3"),
+    values = c("royalblue3", "#C1032A"),
     labels = c("PART-TIME", "FULL-TIME")
   )  +
   scale_x_continuous(
-    breaks = c(1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015),
+    breaks = c(1969.5, 1974.5, 1979.5, 1984.5, 1989.5, 1994.5, 1999.5, 2004.5, 2009.5, 2014.5),
     labels = rev(c("1970", "1975", "1980", "1985", "1990", "1995", "2000", "2005", "2010", "2015")),
     expand = c(0, 0),
     sec.axis = dup_axis()
     ) +# dual age axis
   scale_y_continuous(
     breaks = seq(-100, 100, by = 10),
-    labels = abs,
+    labels = paste0(labs, "%"),
     expand = c(0, 0),
     # lines on original plot are by 2s
-    minor_breaks = seq(-100, 100, by = 5)
+    minor_breaks = seq(-100, 100, by = 2)
   ) +
   labs(title = "Percent of part-time and full-time workers by sex", 
        subtitle = "Women have remained nearly constant over the last 48 years, while the proportion of men working part time is slowly increasing",
@@ -79,12 +88,16 @@ ggplot(part_time, aes(x = rev(year), y = ifelse(sex=="male", -percent, percent),
     text = element_text(face = "bold"),
     panel.background = element_blank(),
     plot.title = element_text(
-      size = 18,
+      family = "Cormorant Garamond",
+      face = "plain",
+      size = 24,
       vjust = 8,
       margin = margin(t = 12, b = 5, unit = "pt")
     ),
     plot.subtitle = element_text(
-      size = 14,
+      family = "Cormorant Garamond",
+      face = "plain",
+      size = 18,
       vjust = 8,
       margin = margin(b = 10, unit = "pt")
     ),
@@ -96,7 +109,7 @@ ggplot(part_time, aes(x = rev(year), y = ifelse(sex=="male", -percent, percent),
     ),
     panel.grid.minor.x = element_line(
       color = "black",
-      size = 0.05
+      size = 0.06
     ),
     panel.grid.minor.y = element_blank(),
     legend.background = element_blank(),
@@ -121,14 +134,17 @@ ggplot(part_time, aes(x = rev(year), y = ifelse(sex=="male", -percent, percent),
     ),
     # age group labels need to be slightly below grid line
     axis.text.y = element_text(
-      vjust = 2,
+      vjust = 0.5,
       size = 12
     ),
-    plot.margin = margin(t = 30, l = 0.5, r = 0.5, unit = "pt")
+    #something really weird with margins
+    #when you change it it changes the weight of the grid lines
+    #played with it to try to fix it... but gave up
+    plot.margin = margin(t = 25, l = 10, r = 10, unit = "pt") 
   )
 
 
-paint_pomological(plot, outfile = "test_plot.png", height = 650, width = 1200, pointsize = 18)
+paint_pomological(plot, outfile = "second_plot.png", height = 650, width = 1100, pointsize = 18)
 
 paint_pomological <- function(
   pomo_gg, 
