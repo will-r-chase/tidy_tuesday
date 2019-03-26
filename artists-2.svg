@@ -1,0 +1,284 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 720.00 576.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    line, polyline, path, rect, circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+  ]]></style>
+  <filter id="n">
+<!--
+Best mixed with bg-color and opacity or light-color
+baseFrequency
+.15 == breeze block
+.05" == concrete
+.0125 === parchment
+-->
+      <feTurbulence id="turb" type="fractalNoise" baseFrequency="0.0085" stitchTiles="stitch" numOctaves="5" result="noise"/>
+      <feDiffuseLighting id="diffLight" class="lght" in="noise" lighting-color="#FFFFFF" surfaceScale="5" ><feDistantLight azimuth="35" elevation="60"/></feDiffuseLighting>
+    </filter>
+    <filter id="watercolor">
+    <!-- procedural textures -->
+    <feTurbulence
+      type="fractalNoise"
+      baseFrequency="0.05"
+      seed="456"
+      result="noise-lg" />
+    <feTurbulence
+      type="fractalNoise"
+      baseFrequency="0.5"
+      result="noise-md" />
+
+    <!-- color variation -->
+    <feComposite
+      in="SourceGraphic"
+      in2="noise-lg"
+      operator="arithmetic"
+      k1=".9" k2=".2"
+      result="BaseGraphic" />
+    
+    <!-- 1st paint layer -->
+    
+    <!-- shape distort -->
+    <feDisplacementMap
+      in="BaseGraphic"
+      in2="noise-lg"
+      xChannelSelector="R"
+      yChannelSelector="G"
+      scale="8"
+      result="layer-1" />
+    <!-- border ripple -->
+    <feDisplacementMap
+      in="layer-1"
+      in2="noise-md"
+      xChannelSelector="R"
+      yChannelSelector="G"
+      scale="3" 
+      result="layer-1" />
+    <!-- border sharpness variation -->
+    <feDisplacementMap
+      in="layer-1"
+      in2="noise-lg"
+      xChannelSelector="B"
+      yChannelSelector="R"
+      scale="10"
+      result="mask-1" />
+    <feGaussianBlur
+      in="mask-1"
+      stdDeviation="1.5"
+      result="mask-1" />
+    <feComposite
+      in="layer-1"
+      in2="mask-1"
+      operator="in"
+      k1="1" k2=".8" k3=".5"
+      result="layer-1" />
+    
+    <!-- 2nd layer -->
+
+    <!-- shape distort -->
+    <feMorphology
+      in="BaseGraphic"
+      operator="erode"
+      radius="1"
+      result="layer-2" />
+    <feDisplacementMap
+      in="layer-2"
+      in2="noise-lg"
+      xChannelSelector="B"
+      yChannelSelector="A"
+      scale="10"
+      result="layer-2" />
+    <!-- border ripple -->
+    <feDisplacementMap
+      in="layer-2"
+      in2="noise-md"
+      xChannelSelector="R"
+      yChannelSelector="A"
+      scale="2" 
+      result="layer-2" />
+    <!-- border glow #1 -->
+    <feDisplacementMap
+      in="layer-2"
+      in2="noise-lg"
+      xChannelSelector="R"
+      yChannelSelector="G"
+      scale="15"
+      result="mask-2" />
+    <feGaussianBlur
+      in="mask-2"
+      stdDeviation="2"
+      result="mask-2" />
+    <feComposite
+      in="layer-2"
+      in2="mask-2"
+      operator="arithmetic"
+      k1="0" k2="1" k3="-0.8" k4="0"
+      result="layer-2" />
+
+    <!-- layers merge -->
+    <feBlend
+      in="layer-1"
+      in2="layer-2"
+      mode="multiply"
+      result="merge" />
+  </filter>
+  <filter id="watercolor-2">
+    <!-- procedural textures -->
+    <feTurbulence result="noise-lg"
+      type="fractalNoise" baseFrequency=".1" NumOctaves="2" seed="1358" />
+    <feTurbulence result="noise-md"
+      type="fractalNoise" baseFrequency=".2" NumOctaves="2" seed="9218" />
+
+    <!-- BaseGraphic w/ chroma variation -->
+    <feComposite result="BaseGraphic"
+      in="SourceGraphic" in2="noise-lg"
+      operator="arithmetic" k1="0.5" k2="0.6" k4="-.07" />
+
+    <!-- 1st layer of paint w/more water -->
+    <feMorphology result="layer-1"
+      in="BaseGraphic"
+      operator="dilate" radius="1.2" />
+    <feDisplacementMap result="layer-1"
+      in="layer-1" in2="noise-lg"
+      xChannelSelector="R" yChannelSelector="B" scale="2" />
+    <feDisplacementMap result="layer-1"
+      in="layer-1" in2="noise-md"
+      xChannelSelector="R" yChannelSelector="B" scale="4" />
+    <feDisplacementMap result="mask"
+      in="layer-1" in2="noise-lg"
+      xChannelSelector="A" yChannelSelector="A" scale="6" />
+    <feGaussianBlur result="mask"
+      in="mask" stdDeviation="1" />
+    <feComposite result="layer-1"
+      in="layer-1" in2="mask"
+      operator="arithmetic" k1="1.2" k2="-.25" k3="-.25" k4="0" />
+
+    <!-- 2nd layer of paint w/more pigment -->
+    <feDisplacementMap result="layer-2"
+      in="BaseGraphic" in2="noise-lg"
+      xChannelSelector="G" yChannelSelector="R" scale="4" />
+    <feDisplacementMap result="layer-2"
+      in="layer-2" in2="noise-md"
+      xChannelSelector="A" yChannelSelector="G" scale="2" />
+    <feDisplacementMap result="glow"
+      in="BaseGraphic" in2="noise-lg"
+      xChannelSelector="R" yChannelSelector="A" scale="8" />
+    <feMorphology result="glow-diff"
+      in="glow"
+      operator="erode" radius="1.8" />
+    <feComposite result="glow"
+      in="glow" in2="glow-diff"
+      operator="out" />
+    <feGaussianBlur result="glow"
+      in="glow" stdDeviation="1.6" />
+    <feComposite result="layer-2"
+      in="layer-2" in2="glow"
+      operator="arithmetic" k1="1.5" k2="0" k3=".3" />
+    <!-- k1="-.1" k2="1" k3="-.6" />-->
+
+    <!-- merge 'em all (like multiply) -->
+    <feComposite
+      in="layer-1" in2="layer-2"
+      operator="arithmetic" k1="-0.8" k2="0.8" k3="1.4" />
+  </filter>
+  <filter id="sketch">
+    <feTurbulence result="noise-lg"
+      type="fractalNoise" baseFrequency=".1" NumOctaves="2" seed="358" />
+    <feTurbulence result="noise-md"
+      type="fractalNoise" baseFrequency=".2" NumOctaves="2" seed="218" />
+    <feDisplacementMap result="layer-2"
+      in="BaseGraphic" in2="noise-lg"
+      xChannelSelector="G" yChannelSelector="R" scale="4" />
+    <feDisplacementMap result="layer-2"
+      in="layer-2" in2="noise-md"
+      xChannelSelector="A" yChannelSelector="G" scale="2" />
+  </filter>
+  <filter id="sketch2">
+      <feTurbulence id="turbulence" baseFrequency="0.02" numOctaves="3" result="noise" seed="0"/>
+      <feDisplacementMap id="displacement" in="SourceGraphic" in2="noise" scale="6" />
+    </filter>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<rect x='-0.00' y='0.00' width='720.00' height='576.00' style='stroke-width: 0.00; stroke: #FFFFFF; fill: #FCF5E3; filter: url(#n);' />
+<defs>
+  <clipPath id='cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA=='>
+    <rect x='188.76' y='64.66' width='437.34' height='432.21' />
+  </clipPath>
+</defs>
+<polyline points='208.64,496.88 208.64,64.66 ' style='stroke-width: 0.26; stroke: #E1DAC8; stroke-linecap: butt;' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<polyline points='328.39,496.88 328.39,64.66 ' style='stroke-width: 0.26; stroke: #E1DAC8; stroke-linecap: butt;' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<polyline points='448.14,496.88 448.14,64.66 ' style='stroke-width: 0.26; stroke: #E1DAC8; stroke-linecap: butt;' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<polyline points='567.90,496.88 567.90,64.66 ' style='stroke-width: 0.26; stroke: #E1DAC8; stroke-linecap: butt;' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<line x1='208.64' y1='90.09' x2='606.22' y2='90.09' style='stroke-width: 0.9; stroke: #1E1E1E; stroke-linecap: round; stroke-opacity: 0.7;' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<line x1='208.64' y1='132.46' x2='481.67' y2='132.46' style='stroke-width: 0.9; stroke: #1E1E1E; stroke-linecap: round; stroke-opacity: 0.7;' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<line x1='208.64' y1='174.83' x2='405.03' y2='174.83' style='stroke-width: 0.9; stroke: #1E1E1E; stroke-linecap: round; stroke-opacity: 0.7;' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<line x1='208.64' y1='217.21' x2='357.13' y2='217.21' style='stroke-width: 0.9; stroke: #1E1E1E; stroke-linecap: round; stroke-opacity: 0.7;' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<line x1='208.64' y1='259.58' x2='342.76' y2='259.58' style='stroke-width: 0.9; stroke: #1E1E1E; stroke-linecap: round; stroke-opacity: 0.7;' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<line x1='208.64' y1='344.33' x2='333.18' y2='344.33' style='stroke-width: 0.9; stroke: #1E1E1E; stroke-linecap: round; stroke-opacity: 0.7;' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<line x1='208.64' y1='301.96' x2='333.18' y2='301.96' style='stroke-width: 0.9; stroke: #1E1E1E; stroke-linecap: round; stroke-opacity: 0.7;' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<line x1='208.64' y1='386.70' x2='330.78' y2='386.70' style='stroke-width: 0.9; stroke: #1E1E1E; stroke-linecap: round; stroke-opacity: 0.7;' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<line x1='208.64' y1='429.08' x2='328.39' y2='429.08' style='stroke-width: 0.9; stroke: #1E1E1E; stroke-linecap: round; stroke-opacity: 0.7;' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<line x1='208.64' y1='471.45' x2='294.86' y2='471.45' style='stroke-width: 0.9; stroke: #1E1E1E; stroke-linecap: round; stroke-opacity: 0.7;' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<circle cx='606.22' cy='90.09' r='10.77pt' style='stroke-width: 0.71; stroke: #F2A428; fill: #F2A428; filter: url(#watercolor-2);' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<circle cx='481.67' cy='132.46' r='10.73pt' style='stroke-width: 0.71; stroke: #F3A528; fill: #F3A528; filter: url(#watercolor-2);' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<circle cx='405.03' cy='174.83' r='11.47pt' style='stroke-width: 0.71; stroke: #E68A22; fill: #E68A22; filter: url(#watercolor-2);' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<circle cx='357.13' cy='217.21' r='12.74pt' style='stroke-width: 0.71; stroke: #C44116; fill: #C44116; filter: url(#watercolor-2);' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<circle cx='342.76' cy='259.58' r='11.59pt' style='stroke-width: 0.71; stroke: #E48521; fill: #E48521; filter: url(#watercolor-2);' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<circle cx='333.18' cy='344.33' r='11.74pt' style='stroke-width: 0.71; stroke: #E07D20; fill: #E07D20; filter: url(#watercolor-2);' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<circle cx='333.18' cy='301.96' r='12.30pt' style='stroke-width: 0.71; stroke: #D25F1B; fill: #D25F1B; filter: url(#watercolor-2);' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<circle cx='330.78' cy='386.70' r='12.14pt' style='stroke-width: 0.71; stroke: #D6691C; fill: #D6691C; filter: url(#watercolor-2);' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<circle cx='328.39' cy='429.08' r='11.85pt' style='stroke-width: 0.71; stroke: #DE781F; fill: #DE781F; filter: url(#watercolor-2);' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<circle cx='294.86' cy='471.45' r='11.04pt' style='stroke-width: 0.71; stroke: #EE9B26; fill: #EE9B26; filter: url(#watercolor-2);' clip-path='url(#cpMTg4Ljc1Nnw2MjYuMDk4fDQ5Ni44Nzd8NjQuNjYyNA==)' />
+<defs>
+  <clipPath id='cpMHw3MjB8NTc2fDA='>
+    <rect x='0.00' y='0.00' width='720.00' height='576.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='104.61' y='474.69' style='font-size: 8.80px; fill: #4D4D4D; font-family: Lato;' textLength='79.21px' lengthAdjust='spacingAndGlyphs'>Oliver Freudenreich</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='130.27' y='432.31' style='font-size: 8.80px; fill: #4D4D4D; font-family: Lato;' textLength='53.56px' lengthAdjust='spacingAndGlyphs'>Harald Lieske</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='125.47' y='389.94' style='font-size: 8.80px; fill: #4D4D4D; font-family: Lato;' textLength='58.36px' lengthAdjust='spacingAndGlyphs'>Klemens Franz</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='115.74' y='347.56' style='font-size: 8.80px; fill: #4D4D4D; font-family: Lato;' textLength='68.08px' lengthAdjust='spacingAndGlyphs'>Dennis Lohausen</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='97.18' y='305.19' style='font-size: 8.80px; fill: #4D4D4D; font-family: Lato;' textLength='86.65px' lengthAdjust='spacingAndGlyphs'>Rodger B. MacGowan</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='122.31' y='262.82' style='font-size: 8.80px; fill: #4D4D4D; font-family: Lato;' textLength='61.51px' lengthAdjust='spacingAndGlyphs'>Doris Matthäus</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='32.56' y='220.44' style='font-size: 8.80px; fill: #4D4D4D; font-family: Lato;' textLength='151.27px' lengthAdjust='spacingAndGlyphs'>Rodger B. MacGowan, Mark Simonitch</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='121.02' y='178.07' style='font-size: 8.80px; fill: #4D4D4D; font-family: Lato;' textLength='62.81px' lengthAdjust='spacingAndGlyphs'>Michael Menzel</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='94.48' y='135.70' style='font-size: 8.80px; fill: #4D4D4D; font-family: Lato;' textLength='89.35px' lengthAdjust='spacingAndGlyphs'>Redmond A. Simonsen</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='117.38' y='93.32' style='font-size: 8.80px; fill: #4D4D4D; font-family: Lato;' textLength='66.45px' lengthAdjust='spacingAndGlyphs'>Franz Vohwinkel</text></g>
+<polyline points='186.02,471.45 188.76,471.45 ' style='stroke-width: 0.06; stroke: #E1DAC8; stroke-linecap: butt; fill-opacity: 0.2;' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<polyline points='186.02,429.08 188.76,429.08 ' style='stroke-width: 0.06; stroke: #E1DAC8; stroke-linecap: butt; stroke-opacity: 0.7;' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<polyline points='186.02,386.70 188.76,386.70 ' style='stroke-width: 0.06; stroke: #E1DAC8; stroke-linecap: butt; stroke-opacity: 0.7;' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<polyline points='186.02,344.33 188.76,344.33 ' style='stroke-width: 0.06; stroke: #E1DAC8; stroke-linecap: butt; stroke-opacity: 0.7;' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<polyline points='186.02,301.96 188.76,301.96 ' style='stroke-width: 0.06; stroke: #E1DAC8; stroke-linecap: butt; stroke-opacity: 0.7;' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<polyline points='186.02,259.58 188.76,259.58 ' style='stroke-width: 0.06; stroke: #E1DAC8; stroke-linecap: butt; stroke-opacity: 0.7;' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<polyline points='186.02,217.21 188.76,217.21 ' style='stroke-width: 0.06; stroke: #E1DAC8; stroke-linecap: butt; stroke-opacity: 0.7;' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<polyline points='186.02,174.83 188.76,174.83 ' style='stroke-width: 0.06; stroke: #E1DAC8; stroke-linecap: butt; stroke-opacity: 0.7;' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<polyline points='186.02,132.46 188.76,132.46 ' style='stroke-width: 0.06; stroke: #E1DAC8; stroke-linecap: butt; stroke-opacity: 0.7;' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<polyline points='186.02,90.09 188.76,90.09 ' style='stroke-width: 0.06; stroke: #E1DAC8; stroke-linecap: butt; stroke-opacity: 0.7;' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<polyline points='208.64,499.62 208.64,496.88 ' style='stroke-width: 0.06; stroke: #E1DAC8; stroke-linecap: butt; stroke-opacity: 0.7;' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<polyline points='328.39,499.62 328.39,496.88 ' style='stroke-width: 0.06; stroke: #E1DAC8; stroke-linecap: butt; stroke-opacity: 0.7;' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<polyline points='448.14,499.62 448.14,496.88 ' style='stroke-width: 0.06; stroke: #E1DAC8; stroke-linecap: butt; stroke-opacity: 0.7;' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<polyline points='567.90,499.62 567.90,496.88 ' style='stroke-width: 0.06; stroke: #E1DAC8; stroke-linecap: butt; stroke-opacity: 0.7;' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='206.03' y='508.28' style='font-size: 8.80px; fill: #4D4D4D; font-family: Lato;' textLength='5.22px' lengthAdjust='spacingAndGlyphs'>0</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='323.17' y='508.28' style='font-size: 8.80px; fill: #4D4D4D; font-family: Lato;' textLength='10.44px' lengthAdjust='spacingAndGlyphs'>50</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='440.31' y='508.28' style='font-size: 8.80px; fill: #4D4D4D; font-family: Lato;' textLength='15.66px' lengthAdjust='spacingAndGlyphs'>100</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='560.07' y='508.28' style='font-size: 8.80px; fill: #4D4D4D; font-family: Lato;' textLength='15.66px' lengthAdjust='spacingAndGlyphs'>150</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='338.70' y='544.75' style='font-size: 11.00px; font-family: Lato;' textLength='137.46px' lengthAdjust='spacingAndGlyphs'>Number of games illustrated</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='642.54' y='223.05' style='font-size: 11.00px; font-family: Lato;' textLength='28.08px' lengthAdjust='spacingAndGlyphs'>Rating</text></g>
+<circle cx='659.54' cy='240.87' r='8.89pt' style='stroke-width: 0.71; stroke: #FFC12E; fill: #FFC12E; filter: url(#watercolor-2);' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<circle cx='659.54' cy='266.82' r='11.35pt' style='stroke-width: 0.71; stroke: #E88F23; fill: #E88F23; filter: url(#watercolor-2);' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<circle cx='659.54' cy='297.40' r='12.37pt' style='stroke-width: 0.71; stroke: #D05B1A; fill: #D05B1A; filter: url(#watercolor-2);' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<circle cx='659.54' cy='330.37' r='13.16pt' style='stroke-width: 0.71; stroke: #B51212; fill: #B51212; filter: url(#watercolor-2);' clip-path='url(#cpMHw3MjB8NTc2fDA=)' />
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='682.03' y='244.10' style='font-size: 8.80px; font-family: Lato;' textLength='5.22px' lengthAdjust='spacingAndGlyphs'>6</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='682.03' y='270.05' style='font-size: 8.80px; font-family: Lato;' textLength='12.56px' lengthAdjust='spacingAndGlyphs'>6.5</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='682.03' y='300.63' style='font-size: 8.80px; font-family: Lato;' textLength='5.22px' lengthAdjust='spacingAndGlyphs'>7</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='682.03' y='333.61' style='font-size: 8.80px; font-family: Lato;' textLength='12.56px' lengthAdjust='spacingAndGlyphs'>7.5</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='188.76' y='46.45' style='font-size: 14.00px; font-style: italic; font-family: Lato;' textLength='368.25px' lengthAdjust='spacingAndGlyphs'>Point size represents the average rating of the artist's games</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='188.76' y='24.70' style='font-size: 18.00px; font-family: Lato;' textLength='252.04px' lengthAdjust='spacingAndGlyphs'>Most prolific board game artists</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='545.59' y='546.71' style='font-size: 8.00px; font-style: italic; font-family: Lato;' textLength='80.51px' lengthAdjust='spacingAndGlyphs'>Graphic: @W_R_Chase</text></g>
+<g clip-path='url(#cpMHw3MjB8NTc2fDA=)'><text x='531.96' y='555.35' style='font-size: 8.00px; font-style: italic; font-family: Lato;' textLength='94.14px' lengthAdjust='spacingAndGlyphs'>Data: boardgamegeek.com</text></g>
+</svg>
